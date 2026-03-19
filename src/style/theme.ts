@@ -1,0 +1,93 @@
+import { createTheme } from '@mui/material/styles';
+
+const theme = createTheme({
+    typography: {
+        fontFamily: 'Quantico, Arial, sans-serif',
+    },
+    components: {
+        MuiTypography: {
+            styleOverrides: {
+                root: {
+                    fontFamily: 'Quantico, Arial, sans-serif',
+                    color: '#FFF'
+                },
+            },
+        },
+        MuiCssBaseline: {
+            styleOverrides: `
+        @font-face {
+          font-family: 'Quantico';
+          font-style: normal;
+          font-weight: 400;
+          font-display: swap;
+          src: url('/fonts/Quantico-Regular.ttf') format('truetype');
+        }
+
+        @font-face {
+          font-family: 'Quantico';
+          font-style: normal;
+          font-weight: 600;
+          font-display: swap;
+          src: url('/fonts/Quantico-Bold.ttf') format('truetype');
+        }
+        
+        :root {
+          font-family: 'Quantico', system-ui, Avenir, Helvetica, Arial, sans-serif;
+          line-height: 1.5;
+          font-weight: 400;
+          color-scheme: light dark;
+          color: rgba(255, 255, 255, 0.87);
+          background-color: #101010;
+          max-width: 100vw;
+          padding: 0;
+          font-synthesis: none;
+          text-rendering: optimizeLegibility;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+          margin: 0;
+          min-height: 100vh;
+          background-color: #101010;
+        }
+
+        a {
+          font-weight: 500;
+          color: #646cff;
+          text-decoration: inherit;
+        }
+
+        a:hover {
+          color: #535bf2;
+        }
+
+        h1 {
+          font-size: 3.2em;
+          line-height: 1.1;
+        }
+
+        button {
+          border-radius: 8px;
+          border: 1px solid transparent;
+          padding: 0.6em 1.2em;
+          font-size: 1em;
+          font-weight: 500;
+          font-family: inherit;
+          background-color: #1a1a1a;
+          cursor: pointer;
+          transition: border-color 0.25s;
+        }
+
+        button:hover {
+          border-color: #646cff;
+        }
+
+        button:focus,
+        button:focus-visible {
+          outline: 4px auto -webkit-focus-ring-color;
+        }
+      `,}}
+});
+
+export default theme;
