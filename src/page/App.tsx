@@ -29,7 +29,6 @@ const VideoBoxContainer = styled(Stack)({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    aspectRatio: 16/9,
     overflow: 'hidden',
     boxShadow:'0px 0px 20px 5px #9d2f00',
 })
@@ -53,9 +52,32 @@ function App() {
 
     const ProbabilityContainer = useMemo(()=>{
         return (
-            <Box display={'flex'} bgcolor={'#291100'} borderRadius={'1rem'} p={2} gap={2} boxShadow={'0px 3px 36px -1px rgb(254.99, 100.92, 48.5)'}>
-                <Typography  fontWeight={500} fontSize={'1rem'}>Fire Hazard probability:&nbsp;</Typography>
-                <Typography  fontWeight={500} fontSize={'1rem'}>{data?.probability ?? 0}</Typography>
+            <Box display={'flex'} flexDirection={{ xs: 'column', sm: "row"}} bgcolor={'#291100'} borderRadius={'1rem'} p={2} gap={5} boxShadow={'0px 3px 36px -1px rgb(254.99, 100.92, 48.5)'}>
+                <Box>
+                    <Typography  fontWeight={500} fontSize={'1rem'}>Fire Hazard model probability:&nbsp;</Typography>
+                    <Typography  fontWeight={500} fontSize={'1rem'}>{((data?.probability ?? 0) * 100).toFixed(2)} %</Typography>
+                </Box>
+
+                <Box>
+                    <Typography  fontWeight={500} fontSize={'1rem'}>Temperature:&nbsp;</Typography>
+                    <Typography  fontWeight={500} fontSize={'1rem'}>{data?.sensor_data?.temp ?? 0} °C</Typography>
+                </Box>
+
+                <Box>
+                    <Typography  fontWeight={500} fontSize={'1rem'}>Humidity:&nbsp;</Typography>
+                    <Typography  fontWeight={500} fontSize={'1rem'}>{(data?.sensor_data?.hum ?? 0).toFixed(2)} %</Typography>
+                </Box>
+
+                <Box>
+                    <Typography  fontWeight={500} fontSize={'1rem'}>TVOC:&nbsp;</Typography>
+                    <Typography  fontWeight={500} fontSize={'1rem'}>{data?.sensor_data?.TVOC ?? 0} ppb</Typography>
+                </Box>
+
+                <Box>
+                    <Typography  fontWeight={500} fontSize={'1rem'}>eCO2:&nbsp;</Typography>
+                    <Typography  fontWeight={500} fontSize={'1rem'}>{data?.sensor_data?.eCO2 ?? 0} ppm</Typography>
+                </Box>
+
             </Box>
         )
     }, [data])
@@ -76,7 +98,7 @@ function App() {
 
             <Box display={'flex'} gap={10} width='100%'>
                 <VideoBoxContainer display={'flex'} gap={2}>
-                    <Typography p={1}> Raw video output</Typography>
+                    <Typography p={1} color={'#FFF'}> HLS 1080p stream [2s delay]</Typography>
                     <VideoContainer>
                         <video
                             ref={videoRef} id="v_stream" autoPlay muted playsInline style={{width: "100%", height:'100%'}}></video>
@@ -85,7 +107,7 @@ function App() {
 
 
                 <VideoBoxContainer display={'flex'} gap={2}>
-                    <Typography> Preprocessed video output</Typography>
+                    <Typography> 224x224 image input</Typography>
                     <VideoContainer>
                         {ImageContainer}
                     </VideoContainer>
