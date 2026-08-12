@@ -30,7 +30,7 @@ export const StyledForm = styled("form")({
 })
 
 export const ExperimentForm: FC<{ results: FetchedData }> = ({ results }) => {
-  const { control, handleSubmit, reset } = useForm<FormValues>({
+  const { control, handleSubmit, reset, getValues } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       ...results,
@@ -63,11 +63,14 @@ export const ExperimentForm: FC<{ results: FetchedData }> = ({ results }) => {
   }
 
   useEffect(() => {
+    const currentValues = getValues()
+
     reset({
       ...results,
-      true_label: 0
+      true_label: currentValues.true_label,
+      experiment: currentValues.experiment
     })
-  }, [results, reset])
+  }, [results, reset, getValues])
 
   return (
     <StyledForm onSubmit={handleSubmit(onSubmit, onError)}>
