@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react"
-import { Box, FormControl, InputLabel, MenuItem, Select, type SelectChangeEvent, Stack, styled, Button, Typography } from "@mui/material"
+import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react"
+import { Box, FormControl, InputLabel, MenuItem, Select, type SelectChangeEvent, Stack, styled, Button, Typography, Input } from "@mui/material"
 import Hls from "hls.js"
 import { useInference } from "../hooks/useInference.ts"
 import FullscreenIcon from "@mui/icons-material/Fullscreen"
@@ -44,8 +44,19 @@ function App() {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const [model, setModel] = useState<ModelValues>("small")
   const [streamMaxView, setMaxView] = useState<boolean>(false)
+  const [fusionHead, setFusionHead] = useState<number>(0.5)
 
-  const { data } = useInference(model)
+  const onFusionChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => {
+    const value = Number(e.target.value)
+    const isBetween = value >= 0 && value <= 1
+    if (!isBetween) {
+      return
+    }
+
+    setFusionHead(value)
+  }
+
+  const { data } = useInference(model, fusionHead)
 
   useEffect(() => {
     if (Hls.isSupported() && videoRef.current) {
@@ -134,6 +145,7 @@ function App() {
     if (!data) {
       return {
         humidity: 0,
+        experiment: "",
         temperature: 0,
         tvoc: 0,
         e_co2: 0,
@@ -155,6 +167,7 @@ function App() {
       iso_time: new Date().getTime().toString(),
       model_probability: data.probability,
       model: modelValueToLabelMap[model],
+      experiment: "",
       pm1: sensor_data.PM1,
       pm2_5: sensor_data.PM2_5
     }
@@ -245,14 +258,15 @@ function App() {
           {ProbabilityContainer}
           <Box
             display={"flex"}
-            width={{ xs: "100%", sm: "25%" }}
+            width={{ xs: "100%", sm: "45%" }}
             flexDirection={{ xs: "column", sm: "row" }}
             bgcolor={"#291100"}
             borderRadius={"1rem"}
+            alignItems={"center"}
             p={2}
             gap={5}
             boxShadow={"0px 3px 24px -1px rgb(254.99, 100.92, 48.5)"}>
-            <FormControl variant="standard" fullWidth>
+            <FormControl variant="standard">
               <InputLabel sx={{ color: "#FFF" }} id="model-select-label">
                 Model
               </InputLabel>
@@ -270,7 +284,15 @@ function App() {
                 <MenuItem value={"large"}>Mobile Net V3 Large</MenuItem>
                 <MenuItem value={"small"}>Mobile Net V3 Small</MenuItem>
                 <MenuItem value={"multimodal-small"}>Multimodal Mobile Net V3 Small</MenuItem>
+                <MenuItem value={"multimodal-late"}>Multimodal Late Fusion</MenuItem>
               </Select>
+            </FormControl>
+
+            <FormControl variant="standard">
+              <InputLabel sx={{ color: "#FFF" }} id="model-select-head-label">
+                Fusion Image Weight
+              </InputLabel>
+              <Input disabled={model !== "multimodal-late"} onChange={onFusionChange} type="number" value={fusionHead} sx={{ color: "#FFF" }} />
             </FormControl>
 
             <ExperimentForm results={mappedResults} />

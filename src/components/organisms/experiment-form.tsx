@@ -2,12 +2,13 @@ import { type FC, type ReactNode, useEffect, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, Snackbar, styled, Typography } from "@mui/material"
+import { Box, Button, FormControl, Input, InputLabel, MenuItem, Select, Snackbar, styled, Typography } from "@mui/material"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import { useSaveResults } from "../../hooks/useSaveResults.ts"
 
 const formSchema = z.object({
   humidity: z.number(),
+  experiment: z.string(),
   temperature: z.number(),
   e_co2: z.number(),
   tvoc: z.number(),
@@ -70,10 +71,11 @@ export const ExperimentForm: FC<{ results: FetchedData }> = ({ results }) => {
 
   return (
     <StyledForm onSubmit={handleSubmit(onSubmit, onError)}>
-      <FormControl variant="standard" size="small">
+      <FormControl variant="standard" size="small" fullWidth>
         <InputLabel
           id="model-result-label"
           sx={{
+            width: 350,
             color: "#FFF",
             "&.Mui-focused": {
               color: "#FFF"
@@ -98,6 +100,36 @@ export const ExperimentForm: FC<{ results: FetchedData }> = ({ results }) => {
               <MenuItem value={0}>Safe</MenuItem>
               <MenuItem value={1}>Fire Hazard</MenuItem>
             </Select>
+          )}
+        />
+      </FormControl>
+
+      <FormControl variant="standard" size="small" fullWidth>
+        <InputLabel
+          id="model-exp-label"
+          sx={{
+            width: 350,
+            color: "#FFF",
+            "&.Mui-focused": {
+              color: "#FFF"
+            }
+          }}>
+          Experiment
+        </InputLabel>
+
+        <Controller
+          control={control}
+          name="experiment"
+          render={({ field }) => (
+            <Input
+              {...field}
+              multiline={true}
+              sx={{
+                color: "#FFF",
+                borderBottom: "1px solid #ced4da",
+                "& svg": { color: "#FFF" }
+              }}
+            />
           )}
         />
       </FormControl>
